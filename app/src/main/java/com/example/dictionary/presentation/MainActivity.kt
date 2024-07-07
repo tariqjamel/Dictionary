@@ -1,32 +1,19 @@
 package com.example.dictionary.presentation
 
+import android.media.MediaPlayer
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -37,19 +24,18 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.dictionary.R
 import com.example.dictionary.domain.model.Meaning
 import com.example.dictionary.domain.model.WordItem
 import com.example.dictionary.ui.theme.DictionaryTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.compose.material3.IconButton
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -110,20 +96,14 @@ class MainActivity : ComponentActivity() {
                     ) {
                         MainScreen(mainState)
                     }
-
                 }
-
             }
         }
     }
 
     @Composable
-    fun MainScreen(
-        mainState: MainState
-    ) {
-
+    fun MainScreen(mainState: MainState) {
         Box(modifier = Modifier.fillMaxSize()) {
-
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -132,24 +112,26 @@ class MainActivity : ComponentActivity() {
                     .padding(horizontal = 30.dp)
             ) {
                 mainState.wordItem?.let { wordItem ->
-
                     Spacer(modifier = Modifier.height(20.dp))
-
                     Text(
                         text = wordItem.word,
                         fontSize = 30.sp,
                         fontWeight = FontWeight.SemiBold,
                         color = MaterialTheme.colorScheme.primary
                     )
-
                     Spacer(modifier = Modifier.height(8.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = wordItem.phonetic,
+                            fontSize = 17.sp,
+                            color = MaterialTheme.colorScheme.onBackground
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
 
-                    Text(
-                        text = wordItem.phonetic,
-                        fontSize = 17.sp,
-                        color = MaterialTheme.colorScheme.onBackground
-                    )
-
+                        IconButton(onClick = { playAudio(wordItem.phoneticAudio, this@MainActivity) }) {
+                            Icon(Icons.Default.PlayArrow, contentDescription = "Play Audio")
+                        }
+                    }
                     Spacer(modifier = Modifier.height(20.dp))
                 }
             }
@@ -160,8 +142,7 @@ class MainActivity : ComponentActivity() {
                     .fillMaxSize()
                     .clip(
                         RoundedCornerShape(
-                            topStart = 50.dp,
-                            topEnd = 50.dp
+                            topStart = 50.dp, topEnd = 50.dp
                         )
                     )
                     .background(
@@ -190,28 +171,19 @@ class MainActivity : ComponentActivity() {
             contentPadding = PaddingValues(vertical = 32.dp)
         ) {
             items(wordItem.meanings.size) { index ->
-                Meaning(
-                    meaning = wordItem.meanings[index],
-                    index = index
-                )
-
+                Word_POS(meaning = wordItem.meanings[index], index = index)
                 Spacer(modifier = Modifier.height(32.dp))
             }
         }
     }
 
     @Composable
-    fun Meaning(
-        meaning: Meaning,
-        index: Int
-    ) {
-
+    fun Word_POS(meaning: Meaning, index: Int) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
         ) {
-
             Text(
                 text = "${index + 1}. ${meaning.partOfSpeech}",
                 fontSize = 17.sp,
@@ -236,58 +208,46 @@ class MainActivity : ComponentActivity() {
 
             if (meaning.definition.definition.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Row(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                 ) {
-
                     Text(
                         text = "Meaning",
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 19.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
-
                     Spacer(modifier = Modifier.width(12.dp))
-
                     Text(
                         text = meaning.definition.definition,
                         fontSize = 17.sp,
                         color = MaterialTheme.colorScheme.onBackground
                     )
-
                 }
             }
 
             if (meaning.definition.example.isNotEmpty()) {
                 Spacer(modifier = Modifier.height(8.dp))
-
                 Row(
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
                 ) {
-
                     Text(
                         text = "Example",
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 19.sp,
                         color = MaterialTheme.colorScheme.primary
                     )
-
                     Spacer(modifier = Modifier.width(12.dp))
-
                     Text(
                         text = meaning.definition.example,
                         fontSize = 17.sp,
                         color = MaterialTheme.colorScheme.onBackground
                     )
-
                 }
             }
-
         }
-
     }
 
     @Composable
@@ -299,5 +259,12 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    private fun playAudio(url: String, context: android.content.Context) {
+        val mediaPlayer = MediaPlayer().apply {
+            setDataSource(url)
+            setOnPreparedListener { it.start() }
+            prepareAsync()
+            setOnCompletionListener { it.release() }
+        }
+    }
 }
-

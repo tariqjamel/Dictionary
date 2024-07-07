@@ -24,7 +24,7 @@ class MainViewModel @Inject constructor(
 
     init {
         _mainState.update { state ->
-            state.copy(searchWord = "word")
+            state.copy(searchWord = "")
         }
 
         searchJob?.cancel()
@@ -56,7 +56,7 @@ class MainViewModel @Inject constructor(
             ).collect { result ->
                 when (result) {
                     is Result.Error -> {
-                        // Handle error state if needed
+                        // for error
                     }
                     is Result.Loading -> {
                         _mainState.update { state ->

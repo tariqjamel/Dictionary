@@ -5,6 +5,6 @@ data class WordItemDto(
     val meanings: List<MeaningDto>? = null,
     val phonetic: String? = null,
 //    val phonetics: List<Phonetic>,
-//    val sourceUrls: List<String>,
-    val word: String? = null
+    val word: String? = null,
+    val phonetics: List<Phonetic>? = null
 )
