@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.rounded.Search
@@ -36,6 +38,10 @@ import com.example.dictionary.ui.theme.DictionaryTheme
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import androidx.compose.material3.IconButton
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import kotlinx.coroutines.delay
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -128,8 +134,27 @@ class MainActivity : ComponentActivity() {
                         )
                         Spacer(modifier = Modifier.width(8.dp))
 
-                        IconButton(onClick = { playAudio(wordItem.phoneticAudio, this@MainActivity) }) {
+                       /* IconButton(onClick = { playAudio(wordItem.phoneticAudio, this@MainActivity) }) {
                             Icon(Icons.Default.PlayArrow, contentDescription = "Play Audio")
+                        }
+                    }*/
+                        var isPlaying by remember { mutableStateOf(false) }
+                        IconButton(onClick = {
+                            isPlaying = true
+                            playAudio(wordItem.phoneticAudio, this@MainActivity)
+                        }) {
+                            Icon(
+                                imageVector = if (isPlaying) Icons.Default.ArrowDropDown
+                                else Icons.Default.PlayArrow,
+                                contentDescription = "Play Audio"
+                            )
+                        }
+
+                        LaunchedEffect(isPlaying) {
+                            if (isPlaying) {
+                                delay(3000)
+                                isPlaying = false
+                            }
                         }
                     }
                     Spacer(modifier = Modifier.height(20.dp))

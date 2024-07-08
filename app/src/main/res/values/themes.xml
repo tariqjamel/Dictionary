@@ -2,4 +2,8 @@
 <resources>
 
     <style name="Theme.Dictionary" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Dictionary.Splash" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:windowFullscreen">true</item>
+    </style>
 </resources>
