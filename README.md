@@ -16,7 +16,7 @@ The Dictionary App is an Android application developed using Jetpack Compose and
 ## Screenshots
 
 <img  align="left" src="dark_theme.png" width="20%" height="20%">
-<img  align="left" src="light_theme.png" width="20%" height="20%">
+<img src="light_theme.png" width="20%" height="20%">
 
 ## Technologies Used
 
