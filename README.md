@@ -12,17 +12,19 @@ The Dictionary App is an Android application developed using Jetpack Compose and
 - **Splash Screen:** The app includes a splash screen for a smooth user experience.
 - **MVVM Architecture:** Utilizes Model-View-ViewModel (MVVM) architecture for better code management and separation of concerns.
 - **Dependency Injection:** Uses Dagger Hilt for dependency injection to manage app dependencies.
+- **Network Requests:** Uses Retrofit to handle network requests to the dictionary API.
 
 ## Screenshots
 
-<img  align="left" src="dark_theme.png" width="20%" height="20%">
-<img src="light_theme.png" width="20%" height="20%">
+<img  align="left" src="dark_theme.png" width="40%" height="40%">
+<img src="light_theme.png" width="40%" height="40%">
 
 ## Technologies Used
 
 - **Kotlin**
 - **Jetpack Compose**
 - **Dictionary API**
+- **Retrofit**
 - **Dagger Hilt**
 - **MVVM Architecture**
 
